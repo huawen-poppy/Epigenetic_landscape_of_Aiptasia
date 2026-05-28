@@ -1,0 +1,33 @@
+---
+## General pipeline parameters:
+
+# Name of the pipeline:
+pipeline: "pipeline-polya-diff"
+# ABSOLUTE path to directory holding the working directory:
+workdir_top: "/ibex/scratch/projects/c2101/aip_epitrans_analysis"
+# Repository URL:
+repo: "https://github.com/nanoporetech/pipeline-polya-diff"
+
+## Pipeline-specific parameters:
+
+# Control tail estimates
+control_tails:
+    A1: "/ibex/scratch/projects/c2101/aip_epitrans_analysis/raw_data/A1/nanopolish/polya_results_new_isoquant_transcriptome_pass_only.tsv"
+    A2: "/ibex/scratch/projects/c2101/aip_epitrans_analysis/raw_data/A2/nanopolish/polya_results_new_isoquant_transcriptome_pass_only.tsv"
+    A3: "/ibex/scratch/projects/c2101/aip_epitrans_analysis/raw_data/A3/nanopolish/polya_results_new_isoquant_transcriptome_pass_only.tsv"
+
+# Treated tail estimates
+treated_tails:
+    H1: "/ibex/scratch/projects/c2101/aip_epitrans_analysis/raw_data/H1/nanopolish/polya_results_new_isoquant_transcriptome_pass_only.tsv"
+    H2: "/ibex/scratch/projects/c2101/aip_epitrans_analysis/raw_data/H2/nanopolish/polya_results_new_isoquant_transcriptome_pass_only.tsv"
+    H3: "/ibex/scratch/projects/c2101/aip_epitrans_analysis/raw_data/H3/nanopolish/polya_results_new_isoquant_transcriptome_pass_only.tsv"
+
+# Minimum reads per transcript
+min_reads_per_transcript: 10
+
+# Generate per-transcript plots
+per_transcript_plots: "true"
+
+# Threads
+threads: 8
+
