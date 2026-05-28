@@ -1,0 +1,9 @@
+the prediction output is based on the read level
+below analysis let's focus on:
+site-, transcript-, gene-, and condition-level summaries
+step1: summary all the prediction outputs
+step2: convert read lebel to site level calls, this step we can do the modification rate calculation
+Differential modification between apo and symbiotic
+check the motif pattern of the modification site 
+check the modification position pattern within each transcript
+step3: compare the differential modification rate transcripts with the dmt and differential polyA length transcripts
