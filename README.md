@@ -1,310 +1,90 @@
 # Aiptasia Nanopore DRS Analysis
 
-Analysis code for **Nanopore direct RNA sequencing (DRS)** of *Aiptasia diaphana* under **symbiotic** and **aposymbiotic** conditions. This repository contains workflows used for transcriptome reconstruction, gene- and transcript-level differential expression analysis, differential isoform usage analysis, poly(A) tail-length analysis, functional enrichment analysis, epitranscriptomic analysis, and figure generation.
+Analysis code for Oxford Nanopore direct RNA sequencing (DRS) data from *Aiptasia diaphana* under symbiotic and aposymbiotic conditions.
 
-## Overview
+## Repository overview
 
-This project uses Oxford Nanopore native RNA sequencing to characterize RNA regulation across multiple layers in *Aiptasia diaphana*, including:
+This repository contains the scripts used for:
 
-- updated transcriptome annotation
-- gene-level differential expression
-- transcript-level differential expression
-- differential isoform usage / isoform switching
-- poly(A) tail-length dynamics
+- preprocessing Nanopore DRS data
+- reference-guided transcriptome reconstruction and quantification
+- differential gene and transcript expression analysis
+- differential isoform usage and isoform switch analysis
+- poly(A) tail-length analysis
 - transcript-resolved epitranscriptomic analysis
-- downstream functional enrichment and figure generation
+- Gene Ontology enrichment analysis
 
-The overall goal is to identify how transcriptional and post-transcriptional regulation differ between **symbiotic** and **aposymbiotic** animals.
-
-## Biological design
-
-Samples were generated from two conditions:
-
-- **Symbiotic**
-- **Aposymbiotic**
-
-The full dataset contains **4 biological replicates per condition**, whereas the primary comparative analyses for differential expression and isoform usage were performed on a quality-controlled subset of **3 replicates per condition**.
-
-## Main analyses included
-
-### 1. Transcriptome reconstruction and quantification
-
-Reference-guided transcriptome reconstruction and quantification were performed using **IsoQuant** with Nanopore DRS reads mapped to the *Aiptasia diaphana* reference genome and annotation.
-
-Outputs include:
-
-- updated transcriptome annotation
-- gene count matrix
-- transcript count matrix
-- transcript classification summary
-- transcriptome structural statistics
-
-### 2. Differential gene and transcript expression
-
-Gene- and transcript-level differential expression analyses were performed using count tables derived from the updated IsoQuant transcriptome.
-
-Outputs include:
-
-- differentially expressed genes (DEGs)
-- differentially expressed transcripts (DETs)
-- overlap analyses between gene- and transcript-level results
-- GO enrichment analyses
-
-### 3. Differential isoform usage
-
-Differential isoform usage and isoform-switch consequence analyses were performed using **IsoformSwitchAnalyzeR**.
-
-Outputs include:
-
-- significant isoform switches
-- differential isoform fraction (dIF)
-- switch consequences
-- mechanism summaries (aTSS, aTTS, intron retention, etc.)
-- candidate genes with coordinated DEG/DET/DTU signals
-
-### 4. Poly(A) tail-length analysis
-
-Poly(A) tail lengths were estimated from Nanopore DRS reads and compared between conditions.
-
-Outputs include:
-
-- transcript-level poly(A) tail-length estimates
-- global condition-level comparisons
-- correlation with transcript expression
-- overlap with DETs
-- GO enrichment for overlapping genes/transcripts
-
-### 5. Epitranscriptomic analysis
-
-Transcript-resolved RNA modification analysis was performed using **TandemMod** on the updated transcriptome.
-
-Outputs include:
-
-- candidate differential modification sites
-- transcript-level modification summaries
-- overlap with DET and poly(A) analyses
-- downstream candidate prioritization
-
-## Repository structure
+## Project structure
 
 ```bash
-.
-├── README.md
-├── data/
-│   ├── raw/                     # raw input files (FASTQ, FAST5/POD5, metadata)
-│   ├── reference/               # genome, annotation, transcriptome reference files
-│   ├── intermediate/            # intermediate files generated during processing
-│   └── processed/               # processed count tables and result matrices
-├── scripts/
-│   ├── 01_preprocessing/
-│   ├── 02_isoquant/
-│   ├── 03_dge_det/
-│   ├── 04_dtu_isoswitch/
-│   ├── 05_polya/
-│   ├── 06_epitranscriptome/
-│   ├── 07_go_enrichment/
-│   └── 08_plotting/
-├── results/
-│   ├── transcriptome/
-│   ├── differential_expression/
-│   ├── isoform_usage/
-│   ├── polya/
-│   ├── epitranscriptome/
-│   └── figures/
-├── notebooks/                  # exploratory or figure-specific notebooks
-├── envs/                       # conda/yaml environment files
-└── docs/                       # manuscript notes, supplementary tables, workflow diagrams
+scripts/
+├── 01_preprocessing/
+├── 02_isoquant/
+├── 03_deg_det/
+├── 04_dtu_isoswitch/
+├── 05_polya/
+├── 06_epitranscriptome/
+└── 07_go_enrichment/
 ```
 
-Rename these folders as needed to match your actual repository layout.
+Each folder contains the code for the corresponding analysis step.
 
-## Software and dependencies
+## Script modules
 
-Core tools used in this project include:
+### `01_preprocessing`
+Preprocessing of Nanopore DRS reads, including input preparation, alignment-related steps, and intermediate file generation.
 
-- **IsoQuant** (v3.3.1)
-- **minimap2**
-- **samtools**
-- **R**
-- **edgeR**
-- **IsoformSwitchAnalyzeR**
-- **eggNOG-mapper**
-- **TandemMod**
-- **Python**
-- common Python and R plotting libraries
+### `02_isoquant`
+Reference-guided transcriptome reconstruction and quantification using IsoQuant.
 
-Optional reproducible environments may be stored in:
+### `03_deg_det`
+Gene-level and transcript-level differential expression analyses.
 
-- `envs/environment.yml`
-- `envs/requirements.txt`
-- `envs/renv.lock`
+### `04_dtu_isoswitch`
+Differential transcript usage, isoform switching, and switch consequence analyses.
 
-## Input files
+### `05_polya`
+Transcript-level poly(A) tail-length estimation and downstream comparative analyses.
 
-Typical inputs include:
+### `06_epitranscriptome`
+Transcript-resolved epitranscriptomic analysis, including candidate RNA modification analyses.
 
-- Nanopore DRS reads (`.fastq`, `.fast5`, or `.pod5`)
-- reference genome FASTA
-- reference GTF/GFF annotation
-- sample metadata table
-- transcriptome FASTA / GTF generated by IsoQuant
-- count matrices for genes and transcripts
+### `07_go_enrichment`
+Gene Ontology enrichment analyses for selected gene or transcript sets.
 
-Example metadata format:
+## Analysis workflow
 
-```tsv
-sample_id	condition	replicate	use_for_primary_analysis
-H1	symbiotic	1	yes
-H2	symbiotic	2	yes
-H3	symbiotic	3	yes
-H4	symbiotic	4	no
-A1	aposymbiotic	1	yes
-A2	aposymbiotic	2	yes
-A3	aposymbiotic	3	yes
-A4	aposymbiotic	4	no
-```
+The analyses were developed for *Aiptasia diaphana* Nanopore DRS data from two biological conditions:
 
-## Recommended workflow
+- symbiotic
+- aposymbiotic
 
-### Step 1. Preprocess Nanopore reads
+Typical workflow:
 
-- basecalling
-- adapter trimming / quality filtering
-- read QC
-- alignment to the reference genome
+1. preprocessing  
+2. IsoQuant-based transcriptome reconstruction and quantification  
+3. DEG/DET analysis  
+4. DTU / isoform switch analysis  
+5. poly(A) tail-length analysis  
+6. epitranscriptomic analysis  
+7. GO enrichment  
 
-### Step 2. Reconstruct transcriptome
+## Main software
 
-Run IsoQuant in reference-guided mode to:
-
-- reconstruct transcript models
-- classify known and novel isoforms
-- quantify gene and transcript abundance
-
-### Step 3. Differential expression analysis
-
-Use the gene and transcript count matrices to identify:
-
-- DEGs
-- DETs
-- overlaps and unique features
-- enriched biological processes
-
-### Step 4. Differential isoform usage analysis
-
-Use IsoformSwitchAnalyzeR to identify:
-
-- isoform switching events
-- switch consequences
-- switching mechanisms
-- candidate regulatory genes
-
-### Step 5. Poly(A) tail-length analysis
-
-Estimate poly(A) tails and test for:
-
-- global differences between conditions
-- relationships with transcript abundance
-- overlap with DET-associated transcripts
-
-### Step 6. Epitranscriptomic analysis
-
-Run TandemMod on the updated transcriptome to detect:
-
-- candidate modification-associated signal changes
-- transcript-level differential modification
-- overlap with expression and poly(A) results
-
-### Step 7. Generate figures and tables
-
-Use downstream plotting scripts to produce:
-
-- manuscript figures
-- supplementary figures
-- summary tables
-
-## Example command placeholders
-
-### IsoQuant
-
-```bash
-python isoquant.py \
-  --reference path/to/genome.fa \
-  --genedb path/to/annotation.gtf \
-  --fastq sample1.fastq sample2.fastq ... \
-  --labels H1 H2 H3 H4 A1 A2 A3 A4 \
-  --threads 36 \
-  --data_type nanopore \
-  --sqanti_output \
-  --check_canonical \
-  --count_exons \
-  -o results/transcriptome/
-```
-
-### edgeR / R
-
-```r
-# differential gene or transcript expression
-source("scripts/03_dge_det/run_edger.R")
-```
-
-### IsoformSwitchAnalyzeR
-
-```r
-# differential isoform usage analysis
-source("scripts/04_dtu_isoswitch/run_isoswitch.R")
-```
-
-### Poly(A)
-
-```bash
-bash scripts/05_polya/run_polya_analysis.sh
-```
-
-### TandemMod
-
-```bash
-bash scripts/06_epitranscriptome/run_tandemod.sh
-```
-
-Replace these with your actual commands and file paths.
-
-## Key outputs
-
-Important final outputs generated by this repository include:
-
-- updated transcriptome GTF and FASTA
-- gene and transcript count matrices
-- DEG and DET result tables
-- differential isoform usage result tables
-- poly(A) tail-length summaries
-- candidate differential modification tables
-- GO enrichment results
-- manuscript-ready figures
-
-## Reproducibility notes
-
-- The primary DEG, DET, and DTU analyses were performed on the quality-controlled subset of samples used in the manuscript.
-- Poly(A) and epitranscriptomic analyses may be run either on the same filtered subset or on the full sample set, depending on the analysis objective.
-- All analyses should be interpreted relative to the updated IsoQuant-derived transcriptome unless otherwise stated.
-
-## Citation
-
-If you use this repository or adapt parts of the workflow, please cite:
-
-- the corresponding manuscript:  
-  **[to be determined about the manuscript title]**
-- the major software packages used in the workflow, including IsoQuant, edgeR, IsoformSwitchAnalyzeR, eggNOG-mapper, and TandemMod
-
-## Contact
-
-For questions about the workflow or manuscript, please contact:
-
-- **Huawen Zhong**
-- **huawen.zhong@kaust.edu.sa**
-- **KAUST**
+- IsoQuant
+- edgeR
+- IsoformSwitchAnalyzeR
+- eggNOG-mapper
+- TandemMod
+- Python
+- R
 
 ## Notes
 
-This repository is intended to provide a transparent and reproducible record of the analyses used in the manuscript. Some scripts may require adaptation of file paths, cluster settings, or software environments before reuse on other systems.
+- Outputs from one step are typically used as inputs for downstream analyses.
+- File paths, software environments, and computational settings may need to be adapted before reuse.
+- This repository is intended to document the analysis workflow used in the associated manuscript.
 
+## Contact
+- **Constance**
+- **huawen.zhong@kaust.edu.sa**
